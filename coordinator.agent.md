@@ -1,16 +1,14 @@
 ---
 name: Coordinator
 description: Ralph loop coordinator - manages task execution cycle with automatic handoffs
-tools: ['read', 'search', 'vscode']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'todo']
 handoffs:
   - label: Execute Task
     agent: Executor
-    prompt: |
-      Read PROGRESS.md and PRD.md. Pick the next incomplete task.
-      Execute it following all requirements. Update PROGRESS.md when done.
+    prompt: Read PROGRESS.md and PRD.md. Pick the next incomplete task. Execute it following all requirements. Update PROGRESS.md when done.
     send: true
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Ralph Loop Coordinator

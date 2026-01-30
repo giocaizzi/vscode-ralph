@@ -1,14 +1,14 @@
 ---
 name: Executor
 description: Ralph loop executor - implements tasks and updates progress
-tools: ['read', 'edit', 'search', 'execute', 'vscode', 'web']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'vscode.mermaid-chat-features/renderMermaidDiagram', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'todo']
 handoffs:
   - label: Continue Loop
     agent: Coordinator
     prompt: Task complete. Read PROGRESS.md and continue to next task.
     send: true
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Ralph Loop Executor

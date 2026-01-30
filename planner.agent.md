@@ -1,16 +1,14 @@
 ---
 name: Planner
 description: Creates detailed PRDs from high-level requirements
-tools: ['read', 'edit', 'search', 'vscode', 'web']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'vscode.mermaid-chat-features/renderMermaidDiagram', 'github.vscode-pull-request-github/copilotCodingAgent', 'github.vscode-pull-request-github/issue_fetch', 'github.vscode-pull-request-github/suggest-fix', 'github.vscode-pull-request-github/searchSyntax', 'github.vscode-pull-request-github/doSearch', 'github.vscode-pull-request-github/renderIssues', 'github.vscode-pull-request-github/activePullRequest', 'github.vscode-pull-request-github/openPullRequest', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'todo']
 handoffs:
   - label: Start Ralph Loop
     agent: Planner
-    prompt: |
-      PRD is ready. Begin Ralph loop execution.
-      Read PRD.md and PROGRESS.md, then start first task.
+    prompt: PRD is ready. Begin Ralph loop execution. Read PRD.md and PROGRESS.md, then start first task.
     send: false
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Ralph Loop Planner
