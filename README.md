@@ -1,4 +1,4 @@
-# VSCode Ralph Loop Agents
+# Copilot Ralph Loop
 
 A language-agnostic implementation of the Ralph Wiggum autonomous agent loop for VSCode, using custom agents with automatic handoffs.
 
