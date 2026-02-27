@@ -4,8 +4,8 @@ description: Creates detailed PRDs from high-level requirements
 tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'figma/*', 'vscode.mermaid-chat-features/renderMermaidDiagram', 'github.vscode-pull-request-github/issue_fetch', 'github.vscode-pull-request-github/suggest-fix', 'github.vscode-pull-request-github/searchSyntax', 'github.vscode-pull-request-github/doSearch', 'github.vscode-pull-request-github/renderIssues', 'github.vscode-pull-request-github/activePullRequest', 'github.vscode-pull-request-github/openPullRequest', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'todo']
 handoffs:
   - label: Start Ralph Loop
-    agent: Planner
-    prompt: 'PRD is ready. Begin Ralph loop execution. Read PRD.md and PROGRESS.md, start loop handing of to executor and loop until all tasks complete.'
+    agent: Coordinator
+    prompt: 'PRD is ready. Begin Ralph loop execution. Read PRD.md and PROGRESS.md, spawn Executor subagents to complete all tasks autonomously.'
     send: false
 metadata:
   version: "1.0"
