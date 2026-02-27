@@ -18,16 +18,21 @@ Named after Ralph Wiggum from The Simpsons - persistent iteration beats one-shot
 
 ```mermaid
 flowchart TD
-    Human["👤 Human\nCreates requirements"] --> Planner["🗂️ Planner\nAgent"]
+    Human["👤 Human\nCreates requirements"] --> Planner["🗂️ Planner"]
     Planner -->|"Generates"| PRD["📄 PRD.md"]
+    Planner -->|"Handoff button"| Coordinator
 
-    PRD --> Coordinator["🎯 Coordinator\nAgent 1"]
-    Coordinator <-->|"Handoff"| Executor["⚙️ Executor\nAgent 2"]
+    PRD --> Coordinator["🎯 Coordinator"]
+    Coordinator -->|"Spawns subagent"| Executor["⚙️ Executor\nuser-invokable: false"]
+    Executor -->|"Spawns subagent"| Reviewer["🔍 Reviewer\nuser-invokable: false"]
+    Reviewer -->|"Returns verdict"| Executor
+    Executor -->|"Returns summary"| Coordinator
 
-    Coordinator -->|"Reads / Writes"| Progress["📊 PROGRESS.md\nFilesystem Memory"]
+    Coordinator -->|"Reads / Writes"| Progress["📊 PROGRESS.md"]
     Executor -->|"Reads / Writes"| Progress
+    Reviewer -->|"Reads"| Progress
 
-    Executor -->|"Commits"| Git["🗃️ Git History"]
+    Executor -->|"Commits"| Git["🗃️ git"]
 
     style Human fill:#f0f0f0,stroke:#666
     style PRD fill:#fff3cd,stroke:#856404
@@ -36,6 +41,7 @@ flowchart TD
     style Planner fill:#cce5ff,stroke:#004085
     style Coordinator fill:#e2d9f3,stroke:#4a0072
     style Executor fill:#fce8e8,stroke:#721c24
+    style Reviewer fill:#fff0d6,stroke:#7a4f00
 ```
 
 ### Execution Flow
@@ -46,25 +52,28 @@ sequenceDiagram
     participant P as Planner
     participant C as Coordinator
     participant E as Executor
+    participant R as Reviewer
     participant FS as 📁 Filesystem
 
     H->>P: Requirements
     P->>FS: Write PRD.md + PROGRESS.md
-    P-->>H: Handoff: Start Ralph Loop
+    P-->>H: Handoff button: Start Ralph Loop
 
     H->>C: Start loop
 
     loop Until all tasks complete
         C->>FS: Read PRD.md + PROGRESS.md
-        C->>E: Spawn subagent (task + criteria)
+        C->>+E: Spawn subagent (task + criteria)
         E->>FS: Read PRD.md + PROGRESS.md
         E->>E: Implement task
+        E->>+R: Spawn subagent (verify task)
+        R->>FS: Read code + acceptance criteria
+        R-->>-E: Verdict (pass / fail + notes)
         E->>FS: Update PROGRESS.md
         E->>FS: git commit
-        E-->>C: Completion summary
+        E-->>-C: Completion summary
     end
 
-    C->>C: All tasks done
     C-->>H: COMPLETE
 ```
 
