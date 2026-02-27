@@ -16,39 +16,56 @@ Named after Ralph Wiggum from The Simpsons - persistent iteration beats one-shot
 
 ## Architecture
 
+```mermaid
+flowchart TD
+    Human["👤 Human\nCreates requirements"] --> Planner["🗂️ Planner\nAgent"]
+    Planner -->|"Generates"| PRD["📄 PRD.md"]
+
+    PRD --> Coordinator["🎯 Coordinator\nAgent 1"]
+    Coordinator <-->|"Handoff"| Executor["⚙️ Executor\nAgent 2"]
+
+    Coordinator -->|"Reads / Writes"| Progress["📊 PROGRESS.md\nFilesystem Memory"]
+    Executor -->|"Reads / Writes"| Progress
+
+    Executor -->|"Commits"| Git["🗃️ Git History"]
+
+    style Human fill:#f0f0f0,stroke:#666
+    style PRD fill:#fff3cd,stroke:#856404
+    style Progress fill:#d1ecf1,stroke:#0c5460
+    style Git fill:#d4edda,stroke:#155724
+    style Planner fill:#cce5ff,stroke:#004085
+    style Coordinator fill:#e2d9f3,stroke:#4a0072
+    style Executor fill:#fce8e8,stroke:#721c24
 ```
-┌──────────┐
-│  Human   │ Creates requirements
-└────┬─────┘
-     │
-     ▼
-┌──────────────┐  Generates PRD
-│   Planner    ├──────────┐
-└──────────────┘          │
-                          ▼
-                    ┌─────────┐
-                    │ PRD.md  │
-                    └────┬────┘
-                         │
-    ┌────────────────────┴────────────────────┐
-    │                                         │
-    ▼                                         ▼
-┌─────────────┐  Assigns task  ┌──────────────┐
-│ Coordinator │◄───────────────┤   Executor   │
-│  (Agent 1)  │                │  (Agent 2)   │
-└──────┬──────┘                └──────┬───────┘
-       │                              │
-       │  Handoff ─────────────────►  │
-       │                              │
-       │  ◄───────── Handoff          │
-       │                              │
-       └──────────┐          ┌────────┘
-                  ▼          ▼
-            ┌──────────────────┐
-            │   PROGRESS.md    │
-            │   (Filesystem    │
-            │     Memory)      │
-            └──────────────────┘
+
+### Execution Flow
+
+```mermaid
+sequenceDiagram
+    participant H as 👤 Human
+    participant P as Planner
+    participant C as Coordinator
+    participant E as Executor
+    participant FS as 📁 Filesystem
+
+    H->>P: Requirements
+    P->>FS: Write PRD.md + PROGRESS.md
+    P-->>H: Handoff: Start Ralph Loop
+
+    H->>C: Start loop
+
+    loop Until all tasks complete
+        C->>FS: Read PRD.md + PROGRESS.md
+        C->>E: Spawn subagent (task + criteria)
+        E->>FS: Read PRD.md + PROGRESS.md
+        E->>E: Implement task
+        E->>FS: Update PROGRESS.md
+        E->>FS: git commit
+        E-->>C: Completion summary
+    end
+
+    C->>C: All tasks done
+    C-->>H: COMPLETE
 ```
 
 ## Features
@@ -58,6 +75,7 @@ Named after Ralph Wiggum from The Simpsons - persistent iteration beats one-shot
 ✅ **Language agnostic** - Works with any programming language/stack
 ✅ **Atomic tasks** - One task per iteration, committed immediately
 ✅ **Context reset** - Avoids context pollution, uses filesystem as memory
+✅ **Built-in review** - Reviewer subagent verifies every task before moving on
 
 ## Setup
 
@@ -73,9 +91,7 @@ Named after Ralph Wiggum from The Simpsons - persistent iteration beats one-shot
 
 ```bash
 mkdir -p .github/agents
-cp coordinator.agent.md .github/agents/
-cp executor.agent.md .github/agents/
-cp planner.agent.md .github/agents/
+cp agents/*.agent.md .github/agents/
 ```
 
 2. Restart VSCode or reload window
@@ -84,6 +100,7 @@ cp planner.agent.md .github/agents/
    - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
    - Type "Select Agent"
    - Should see: Coordinator, Executor, Planner
+   - (Reviewer is `user-invokable: false` — it won't appear in the dropdown, only used as a subagent)
 
 ## Usage
 
@@ -147,6 +164,7 @@ your-project/
 │   └── agents/
 │       ├── coordinator.agent.md    # Task orchestrator
 │       ├── executor.agent.md       # Task implementer
+│       ├── reviewer.agent.md       # Task verifier (subagent only)
 │       └── planner.agent.md        # PRD creator
 ├── PRD.md                          # Product requirements
 ├── PROGRESS.md                     # Iteration state

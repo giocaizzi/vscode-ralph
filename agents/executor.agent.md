@@ -1,10 +1,9 @@
 ---
 name: Executor
 description: Ralph loop executor - implements tasks with fresh context as subagent
-user-invokable: false  # Only callable as subagent by Coordinator
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'figma/*', 'vscode.mermaid-chat-features/renderMermaidDiagram', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'todo']
-metadata:
-  version: "2.0"
+user-invokable: false
+disable-model-invocation: false
+tools: ['vscode', 'terminal', 'read', 'edit', 'search', 'web', 'figma/*', 'vscode.mermaid-chat-features/renderMermaidDiagram', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'todo']
 ---
 
 # Ralph Loop Executor
